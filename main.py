@@ -37,7 +37,8 @@ from reviews.router import router as router_review
 app = fastapi.FastAPI()
 
 origins = [
-    "*"
+    "*",
+    "localhost:4200"
 ]
 
 app.add_middleware(
