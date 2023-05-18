@@ -26,20 +26,20 @@ router = APIRouter(
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-@router.get("/")
-def get_places_filter(
-        parking: Optional[bool] = False,
-        recreation_area: Optional[bool] = False,
-        conference_hall: Optional[bool] = False,
-        type_cafe: Optional[Cafe] = None,
-        district: Optional[str] = None,
-        hours: Optional[Hours] = None,
-        session: Session = Depends(get_db),
-):
-    queryset = session.query(Place)
-    return queryset.filter(or_(Place.district == district, Place.type_cafe == type_cafe,
-                               Place.parking == parking, Place.conference_hall == conference_hall,
-                               Place.recreation_area == recreation_area, Place.opening_hours == hours)).all()
+# @router.get("/")
+# def get_places_filter(
+#         parking: Optional[bool] = False,
+#         recreation_area: Optional[bool] = False,
+#         conference_hall: Optional[bool] = False,
+#         type_cafe: Optional[Cafe] = None,
+#         district: Optional[str] = None,
+#         hours: Optional[Hours] = None,
+#         session: Session = Depends(get_db),
+# ):
+#     queryset = session.query(Place)
+#     return queryset.filter(or_(Place.district == district, Place.type_cafe == type_cafe,
+#                                Place.parking == parking, Place.conference_hall == conference_hall,
+#                                Place.recreation_area == recreation_area, Place.opening_hours == hours)).all()
 
 
 @router.post('/upload_place')
@@ -79,3 +79,6 @@ def get_place(id_place: int, session: Session = Depends(get_db)):
     return stmt + stmt2 + stmt3
 
 
+@router.get('/all')
+def all_places(session: Session = Depends(get_db)):
+    return session.query(Place).all()
