@@ -6,8 +6,8 @@ class UserBaseSchema(BaseModel):
     phone: str
     name: str
     surname: str
-    role_id: int
-    photo_user: str
+    role_id: str
+    photo_user: str = None
 
 
 class CreateUserSchema(UserBaseSchema):
