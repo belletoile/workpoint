@@ -50,7 +50,13 @@ def upload(token: Annotated[str, Depends(oauth2_scheme)], payload: PlaceBaseSche
     try:
         data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
         payload.user_id = data["id"]
-        payload.photo = [save_file_place(file) for file in files]
+        payload.rating = 0
+        payload.photo = ""
+        for file in files:
+            payload.photo = payload.photo + save_file_place(file) + "# "
+            # str1 = save_file_place(file)
+            # payload.photo = "".join(str1 + ", ")
+        # payload.photo = [save_file_place(file) for file in files]
         tags = payload.tags
         payload.tags = []
         # for i in payload.tags:

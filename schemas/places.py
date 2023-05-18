@@ -47,6 +47,7 @@ class PlaceBaseSchema(BaseModel):
     site: str
     photo: str
     parking: bool
+    rating: str
     recreation_area: bool
     conference_hall: bool
     tags: list

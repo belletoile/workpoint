@@ -86,6 +86,7 @@ class Place(Base):
     email = Column(String)
     site = Column(String)
     photo = Column(String)
+    rating = Column(String)
     parking = Column(Boolean, default=False)
     recreation_area = Column(Boolean, default=False)
     conference_hall = Column(Boolean, default=False)
