@@ -79,3 +79,24 @@ class LinkSchema(LinkBaseSchema):
 
     class Config:
         orm_mode = True
+
+
+class PlaceTwoBaseSchema(BaseModel):
+    user_id: int
+    name: str
+    city: str
+    district: str
+    address: str
+    description: str
+    opening_hours: Hours
+    cost: Cost
+    type_cafe: Cafe
+    company_phone: str
+    email: str
+    site: str
+    photo: str
+    parking: bool
+    rating: str
+    recreation_area: bool
+    conference_hall: bool
+    id: int

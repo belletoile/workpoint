@@ -5,13 +5,15 @@ from fastapi_filter import FilterDepends
 import jwt
 from sqlalchemy import select, Row, or_, join
 from sqlalchemy.orm import Session
+from sqlalchemy import update as sqlalchemy_update
 from fastapi import APIRouter, Depends, Body, UploadFile, File, HTTPException, status
+from sqlalchemy import update
 
 import settings
 from models.models import Place, Tags, Reviews, PlaceTags
 
 from db_initializer import get_db
-from schemas.places import Hours, Cafe, PlaceSchema, PlaceBaseSchema
+from schemas.places import Hours, Cafe, PlaceSchema, PlaceBaseSchema, PlaceTwoBaseSchema
 from services.files import save_file_place
 from services.db import users as user_db_services
 
@@ -25,6 +27,7 @@ router = APIRouter(
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
 
 # @router.get("/")
 # def get_places_filter(
@@ -51,6 +54,7 @@ def upload(token: Annotated[str, Depends(oauth2_scheme)], payload: PlaceBaseSche
         data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
         payload.user_id = data["id"]
         payload.rating = 0
+        print(type(payload))
         payload.photo = ""
         for file in files:
             payload.photo = payload.photo + save_file_place(file) + "# "
@@ -72,8 +76,8 @@ def upload(token: Annotated[str, Depends(oauth2_scheme)], payload: PlaceBaseSche
     return user_db_services.create_place(session, place=payload, tags=tags)
 
 
-@router.post('/get_tags')
-def add(session: Session = Depends(get_db)):
+@router.get('/get_tags')
+def all_tags(session: Session = Depends(get_db)):
     return session.query(Tags).all()
 
 
@@ -88,3 +92,15 @@ def get_place(id_place: int, session: Session = Depends(get_db)):
 @router.get('/all')
 def all_places(session: Session = Depends(get_db)):
     return session.query(Place).all()
+
+
+@router.post('/update')
+def update_place(token: Annotated[str, Depends(oauth2_scheme)], payload: PlaceTwoBaseSchema = Body(),
+                 session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    payload.user_id = data["id"]
+    stmt = sqlalchemy_update(Place).where(
+        Place.id == payload.id).values(**payload.dict())
+    session.execute(stmt)
+    session.commit()
+    return {'ok'}
