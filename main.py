@@ -13,6 +13,7 @@ from passlib.context import CryptContext
 from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 # from db_initializer import get_async_session
 import settings
@@ -35,7 +36,18 @@ from reviews.router import router as router_review
 
 app = fastapi.FastAPI()
 
+origins = [
+    "*"
+]
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "DELETE"],
+    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
+                   "Authorization"],
+)
 
 app.include_router(router_places)
 app.include_router(router_user)
