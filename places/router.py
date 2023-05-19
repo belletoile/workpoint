@@ -57,7 +57,7 @@ def upload(token: Annotated[str, Depends(oauth2_scheme)], payload: PlaceBaseSche
         print(type(payload))
         payload.photo = ""
         for file in files:
-            payload.photo = payload.photo + save_file_place(file) + "# "
+            payload.photo = payload.photo + save_file_place(file) + "#"
             # str1 = save_file_place(file)
             # payload.photo = "".join(str1 + ", ")
         # payload.photo = [save_file_place(file) for file in files]
@@ -82,12 +82,23 @@ def all_tags(session: Session = Depends(get_db)):
 
 
 @router.post('/get_place')
-def get_place(id_place: int, session: Session = Depends(get_db)):
-    stmt = session.query(Reviews).filter(Reviews.place_id == id_place).all()
-    stmt2 = session.query(Place).filter(Place.id == id_place).all()
-    stmt3 = session.query(Tags).filter(Tags.id == id_place).all()
-    return stmt + stmt2 + stmt3
+def get_place_by_id(id_place: int, session: Session = Depends(get_db)):
+    # stmt = session.query(Reviews).filter(Reviews.place_id == id_place).all()
+    stmt2 = session.query(Place).filter(Place.id == id_place).first()
+    stmt2.tags
+    # stmt3 = session.query(PlaceTags).filter(PlaceTags.place_id == id_place).all()
+    # stmt + stmt2 + stmt3
+    return stmt2
 
+
+@router.post('/get_reviews')
+def get_reviews_by_id_place(id_place: int, session: Session = Depends(get_db)):
+    stmt = session.query(Reviews).filter(Reviews.place_id == id_place).all()
+    # stmt2 = session.query(Place).filter(Place.id == id_place).first()
+    # stmt2.tags
+    # stmt3 = session.query(PlaceTags).filter(PlaceTags.place_id == id_place).all()
+    # stmt + stmt2 + stmt3
+    return stmt
 
 @router.get('/all')
 def all_places(session: Session = Depends(get_db)):
@@ -102,5 +113,45 @@ def update_place(token: Annotated[str, Depends(oauth2_scheme)], payload: PlaceTw
     stmt = sqlalchemy_update(Place).where(
         Place.id == payload.id).values(**payload.dict())
     session.execute(stmt)
+    session.commit()
+    return {'ok'}
+
+
+@router.post('/update_photo')
+def update_photo(id_place: int, token: Annotated[str, Depends(oauth2_scheme)], files: List[UploadFile] = File(...),
+                 session: Session = Depends(get_db)):
+    stmt = session.query(Place).get(id_place)
+    test_list2 = stmt.photo.split('#')
+    new_photo = ""
+    for file in files:
+        new_photo = new_photo + save_file_place(file) + "#"
+    print(new_photo.split('#'))
+    test_list1 = new_photo.split('#')
+
+    temp1 = [ele for ele in test_list1 if ele not in test_list2]
+
+    for i in range(len(temp1)):
+        stmt.photo = stmt.photo + temp1[i] + '#'
+
+    session.commit()
+    return {'ok'}
+
+
+@router.post('/update_tags')
+def update_tags_place(id_place: int, tags: List[str], token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+    stmt = session.query(Place).filter_by(id=id_place).first()
+    print(stmt.tags)
+    stmt.tags = []
+    for t in tags:
+        tag = session.query(Tags).filter_by(id=t).first()
+        stmt.tags.append(tag)
+    session.commit()
+    return stmt.tags
+
+
+@router.delete('/delete')
+def delete_place(id_place: int, token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+    video = session.query(Place).filter_by(id=id_place).first()
+    session.delete(video)
     session.commit()
     return {'ok'}

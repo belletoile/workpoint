@@ -131,14 +131,14 @@ def edit_role(id: int, role_id: int, session: Session = Depends(get_db)):
 
 
 @router.get("/{id}", response_model=UserOutSchema)
-def get_me(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     stmt = session.query(User).get(data["id"])
     return stmt
 
 
 @router.get("/")
-def get_place_user_id(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+def get_place_by_user_id(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     stmt = session.query(Place).filter(Place.user_id == data["id"]).all()
     return stmt
