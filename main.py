@@ -33,6 +33,18 @@ from places.router import router as router_places
 from user.router import router as router_user
 from ad.router import router as router_ad
 from reviews.router import router as router_review
+from tasks.router import router as router_tasks
+
+from fastapi import BackgroundTasks
+from starlette.responses import JSONResponse
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
+from pydantic import EmailStr, BaseModel
+from typing import List
+
+
+class EmailSchema(BaseModel):
+    email: List[EmailStr]
+
 
 app = fastapi.FastAPI()
 
@@ -50,10 +62,13 @@ app.add_middleware(
                    "Authorization"],
 )
 
+
 app.include_router(router_places)
 app.include_router(router_user)
 app.include_router(router_ad)
 app.include_router(router_review)
+app.include_router(router_tasks)
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, log_level="debug")
