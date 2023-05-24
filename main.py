@@ -48,12 +48,12 @@ class EmailSchema(BaseModel):
 app = fastapi.FastAPI()
 
 origins = [
-    "http://95.82.209.24:*"
+    "http://95\.82\.209\.24:.*"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origin_regex="http://95\.82\.209\.24:.*",
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE"],
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
