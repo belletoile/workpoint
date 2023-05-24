@@ -130,7 +130,7 @@ def edit_role(id: int, role_id: int, session: Session = Depends(get_db)):
     return stmt
 
 
-@router.get("/", response_model=UserOutSchema)
+@router.get("/current", response_model=UserOutSchema)
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     stmt = session.query(User).get(data["id"])
