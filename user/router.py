@@ -87,9 +87,11 @@ def login(payload: OAuth2PasswordRequestForm = Depends(),
 
 
 @router.post("/photo")
-def upload_avatar(id: int = None, file: UploadFile = File(...), session: Session = Depends(get_db)):
+def upload_avatar(token: Annotated[str, Depends(oauth2_scheme)], file: UploadFile = File(...),
+                  session: Session = Depends(get_db)):
     file_url = save_file_user(file)
-    stmt = session.query(User).get(id)
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    stmt = session.query(User).get(data["id"])
     stmt.photo_user = file_url
     session.add(stmt)
     session.commit()
