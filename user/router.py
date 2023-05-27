@@ -4,13 +4,14 @@ from fastapi import APIRouter, UploadFile, File, Depends, Body, HTTPException, s
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from jose import JWTError, jwt
+from sqlalchemy import update as sqlalchemy_update
 from sqlalchemy import update
 
 import settings
 from db_initializer import get_db
 from models import models as user_model
 from models.models import User, Place
-from schemas.users import UserSchema, UserBaseSchema, UserOutSchema, TokenPayload, CreateUserSchema
+from schemas.users import UserSchema, UserBaseSchema, UserOutSchema, TokenPayload, CreateUserSchema, UserTwoBaseSchema
 from services.files import save_file_user
 from services.db import users as user_db_services
 
@@ -96,28 +97,34 @@ def upload_avatar(id: int = None, file: UploadFile = File(...), session: Session
 
 
 @router.post("/settings")
-def edit_profile(id: int, phone: Optional[str], name: Optional[str],
-                 surname: Optional[str], city: Optional[str],
-                 session: Session = Depends(get_db)):
-    stmt = session.query(User).get(id)
-    if name is None:
-        pass
-    else:
-        stmt.name = name
-    if surname is None:
-        pass
-    else:
-        stmt.surname = surname
-    if phone is None:
-        pass
-    else:
-        stmt.phone = phone
-    if city is None:
-        pass
-    else:
-        stmt.city = city
-    session.add(stmt)
+def edit_profile(token: Annotated[str, Depends(oauth2_scheme)],
+                 payload: UserTwoBaseSchema = Body(),
+                 session: Session = Depends(get_db)
+                 ):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    payload.id = data["id"]
+    stmt = sqlalchemy_update(User).where(
+        User.id == payload.id).values(**payload.dict())
+    session.execute(stmt)
     session.commit()
+# if name is None:
+#     pass
+# else:
+#     stmt.name = name
+# if surname is None:
+#     pass
+# else:
+#     stmt.surname = surname
+# if phone is None:
+#     pass
+# else:
+#     stmt.phone = phone
+# if city is None:
+#     pass
+# else:
+#     stmt.city = city
+# session.add(stmt)
+# session.commit()
     return {'Status: 200 OK'}
 
 

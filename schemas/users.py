@@ -22,6 +22,14 @@ class UserSchema(UserBaseSchema):
         orm_mode = True
 
 
+class UserTwoBaseSchema(BaseModel):
+    phone: str
+    name: str
+    surname: str
+    city: str
+    id: int
+
+
 class UserOutSchema(BaseModel):
     id: int
     phone: str

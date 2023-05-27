@@ -91,6 +91,7 @@ class Place(Base):
     recreation_area = Column(Boolean, default=False)
     conference_hall = Column(Boolean, default=False)
     tags = relationship('Tags', secondary="placetags", back_populates='place')
+    reviews = relationship('User', secondary="reviews", back_populates='reviews_user')
 
 
 class Role(Base):
@@ -113,6 +114,7 @@ class User(Base):
     role_id = Column(Integer, ForeignKey("role.id"))
     is_active = Column(Boolean, default=False)
     photo_user = Column(String)
+    reviews_user = relationship('Place', secondary="reviews", back_populates='reviews', cascade='all, delete')
 
     UniqueConstraint("phone", name="uq_user_phone")
     PrimaryKeyConstraint("id", name="pk_user_id")
