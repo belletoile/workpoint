@@ -35,6 +35,7 @@ def signup(
         session: Session = Depends(get_db)
 ):
     """Processes request to register user account."""
+    payload.photo_user = "https://storage.yandexcloud.net/photo-user/840393.png#"
     payload.hashed_password = user_model.User.hash_password(payload.hashed_password)
     return user_db_services.create_user(session, user=payload)
 
