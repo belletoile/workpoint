@@ -36,7 +36,7 @@ class UserOutSchema(BaseModel):
     name: str
     surname: str
     role_id: int
-    photo_user: str
+    photo_user: str = None
     city: Optional[str] = None
 
     class Config:
