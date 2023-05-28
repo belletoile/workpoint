@@ -131,8 +131,9 @@ def edit_profile(token: Annotated[str, Depends(oauth2_scheme)],
 
 
 @router.post("/role")
-def edit_role(id: int, role_id: int, session: Session = Depends(get_db)):
-    stmt = session.query(User).get(id)
+def edit_role(token: Annotated[str, Depends(oauth2_scheme)], role_id: int, session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    stmt = session.query(User).get(data["id"])
     stmt.role_id = role_id
     session.add(stmt)
     session.commit()
