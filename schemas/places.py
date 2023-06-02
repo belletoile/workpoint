@@ -19,6 +19,7 @@ from models.models import Place
 class Hours(str, Enum):
     constantly = "Круглосуточно"
     on_weekdays = "По будням"
+    every_day = "Каждый день"
 
 
 class Cost(str, Enum):

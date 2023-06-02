@@ -34,6 +34,9 @@ class Reviews(Base):
     __tablename__ = "reviews"
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"))
+    user_name = Column(String)
+    user_surname = Column(String)
+    user_photo = Column(String)
     place_id = Column(Integer, ForeignKey("place.id"))
     body = Column(String)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
@@ -52,21 +55,6 @@ class Ad(Base):
     __tablename__ = "ad"
     id = Column(Integer, primary_key=True)
     photo = Column(String)
-
-# class Hours(enum.Enum):
-#     constantly = "Круглосуточно"
-#     on_weekdays = "По будням"
-#
-#
-# class Cost(enum.Enum):
-#     free = "Бесплатно"
-#     paid = "Платно"
-#
-#
-# class Cafe(enum.Enum):
-#     cafe = "Кафе"
-#     anti_cafe = "Антикафе"
-#     working_hall = "Рабочий зал"
 
 
 class Place(Base):
