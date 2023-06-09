@@ -7,7 +7,8 @@ from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
 class Storage:
     def __init__(self, bucket_name):
         self.bucket_name = bucket_name
-        self.s3 = boto3.client(endpoint_url='https://s3.timeweb.com',
+        self.s3 = boto3.client('s3',
+                               endpoint_url='https://s3.timeweb.com',
                                region_name='ru-1',
                                aws_access_key_id=AWS_ACCESS_KEY_ID,
                                aws_secret_access_key=AWS_SECRET_ACCESS_KEY
