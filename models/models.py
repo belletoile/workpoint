@@ -127,7 +127,7 @@ class User(Base):
         return {
             "access_token": str(jwt.encode(
                 {"name": self.name, "phone": self.phone, "id": self.id},
-                settings.SECRET_KEY
+                settings.SECRET_KEY, algorithm="HS256"
             ))
         }
 
