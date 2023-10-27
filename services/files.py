@@ -13,7 +13,7 @@ def save_file_place(file: UploadFile = File(...)):
         with open('tmp_files/' + file.filename, 'wb') as f:
             f.write(content)
 
-        s3 = Storage('38cfe289-workpoints')
+        s3 = Storage('38cfe289-workpoint')
         file_url = s3.save_file(file.filename)
     except Exception as e:
         logger.error(f'Возникла ошибка в сохранении файла {e}')
