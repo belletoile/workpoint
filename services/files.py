@@ -34,7 +34,7 @@ def save_file_user(file: UploadFile = File(...)):
         with open('tmp_files/' + file.filename, 'wb') as f:
             f.write(content)
 
-        s4 = Storage('38cfe289-workpoints')
+        s4 = Storage('38cfe289-workpoint')
         file_url = s4.save_file(file.filename)
     except Exception as e:
         logger.error(f'Возникла ошибка в сохранении файла {e}')
@@ -55,7 +55,7 @@ def save_file_ad(file: UploadFile = File(...)):
         with open('tmp_files/' + file.filename, 'wb') as f:
             f.write(content)
 
-        s3 = Storage('38cfe289-workpoints')
+        s3 = Storage('38cfe289-workpoint')
         file_url = s3.save_file(file.filename)
     except Exception as e:
         logger.error(f'Возникла ошибка в сохранении файла {e}')
