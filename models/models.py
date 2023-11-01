@@ -80,6 +80,7 @@ class Place(Base):
     conference_hall = Column(Boolean, default=False)
     tags = relationship('Tags', secondary="placetags", back_populates='place')
     reviews = relationship('User', secondary="reviews", back_populates='reviews_user')
+    status = Column(String)
 
 
 class Role(Base):

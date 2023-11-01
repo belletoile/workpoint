@@ -33,6 +33,12 @@ class Cafe(str, Enum):
     working_hall = "Рабочий зал"
 
 
+class Status(str, Enum):
+    on_check = "На проверке"
+    approved = "Одобрено"
+    refused = "Отказано"
+
+
 class PlaceBaseSchema(BaseModel):
     user_id: int
     name: str
@@ -52,6 +58,7 @@ class PlaceBaseSchema(BaseModel):
     recreation_area: bool
     conference_hall: bool
     tags: list
+    status: Status
 
     @classmethod
     def __get_validators__(cls):
@@ -92,6 +99,7 @@ class PlaceTwoBaseSchema(BaseModel):
     opening_hours: Hours
     cost: Cost
     type_cafe: Cafe
+    status: Status
     company_phone: str
     email: str
     site: str

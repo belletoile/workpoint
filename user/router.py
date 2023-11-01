@@ -20,10 +20,6 @@ router = APIRouter(
     tags=["User"]
 )
 
-# reuseable_oauth = OAuth2PasswordBearer(
-#     tokenUrl="/login",
-#     scheme_name="JWT"
-# )
 ALGORITHM = "HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
@@ -73,20 +69,6 @@ def login(payload: OAuth2PasswordRequestForm = Depends(),
     return user.generate_token()
 
 
-# def get_current_user(token: str = Depends(reuseable_oauth), session: Session = Depends(get_db)) -> UserOutSchema:
-#     payload = jwt.decode(
-#         token, settings.SECRET_KEY, algorithms=[ALGORITHM]
-#     )
-#     token_data = TokenPayload(**payload)
-#     stmt = session.query(User).filter(User.phone == token_data.phone).all()
-#     if stmt is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="Could not find user",
-#         )
-#     return stmt
-
-
 @router.post("/photo")
 def upload_avatar(token: Annotated[str, Depends(oauth2_scheme)], file: UploadFile = File(...),
                   session: Session = Depends(get_db)):
@@ -110,24 +92,6 @@ def edit_profile(token: Annotated[str, Depends(oauth2_scheme)],
         User.id == payload.id).values(**payload.dict())
     session.execute(stmt)
     session.commit()
-# if name is None:
-#     pass
-# else:
-#     stmt.name = name
-# if surname is None:
-#     pass
-# else:
-#     stmt.surname = surname
-# if phone is None:
-#     pass
-# else:
-#     stmt.phone = phone
-# if city is None:
-#     pass
-# else:
-#     stmt.city = city
-# session.add(stmt)
-# session.commit()
     return {'Status: 200 OK'}
 
 

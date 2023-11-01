@@ -34,6 +34,7 @@ from user.router import router as router_user
 from ad.router import router as router_ad
 from reviews.router import router as router_review
 from tasks.router import router as router_tasks
+from admin.router import router as router_admin
 
 from fastapi import BackgroundTasks
 from starlette.responses import JSONResponse
@@ -64,9 +65,11 @@ app.add_middleware(
 
 app.include_router(router_places)
 app.include_router(router_user)
+app.include_router(router_admin)
 app.include_router(router_ad)
 app.include_router(router_review)
 app.include_router(router_tasks)
+
 
 
 if __name__ == "__main__":
