@@ -11,7 +11,7 @@ from sqlalchemy import (
     Integer,
     Boolean,
     UniqueConstraint,
-    PrimaryKeyConstraint, ForeignKey, JSON, ARRAY, Enum, TIMESTAMP
+    PrimaryKeyConstraint, ForeignKey, JSON, ARRAY, Enum, TIMESTAMP, Date
 )
 import enum
 # This is a special import for ENUM strictly because I am using postgres DB
@@ -59,6 +59,10 @@ class Ad(Base):
     address = Column(String)
     tariff = Column(String)
     email = Column(String)
+    status = Column(String)
+    id_place = Column(Integer)
+    date_to = Column(Date)
+    date_from = Column(Date)
     photo = Column(String)
 
 

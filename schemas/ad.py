@@ -1,4 +1,5 @@
 import json
+from datetime import date
 from enum import Enum
 
 from pydantic import BaseModel, EmailStr
@@ -9,12 +10,22 @@ class Price(str, Enum):
     one_week = "На 7 дней"
 
 
+class Status(str, Enum):
+    on_check = "На проверке"
+    approved = "Одобрено"
+    refused = "Отказано"
+
+
 class AdBaseSchema(BaseModel):
     name: str
     city: str
     address: str
     tariff: Price
     email: EmailStr
+    status: Status
+    id_place: int
+    date_to: date
+    date_from: date
     photo: str
 
     @classmethod
