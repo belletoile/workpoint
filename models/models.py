@@ -54,6 +54,11 @@ class Tags(Base):
 class Ad(Base):
     __tablename__ = "ad"
     id = Column(Integer, primary_key=True)
+    name = Column(String)
+    city = Column(String)
+    address = Column(String)
+    tariff = Column(String)
+    email = Column(String)
     photo = Column(String)
 
 

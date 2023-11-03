@@ -13,8 +13,10 @@ router = APIRouter(
 )
 
 
-@router.post("/upload_ad")
-def upload_ad(payload: AdBaseSchema = Body(), session: Session = Depends(get_db)):
+@router.post("/upload_ad", response_model=AdBaseSchema)
+def upload_ad(payload: AdBaseSchema = Body(), file: UploadFile = File(...), session: Session = Depends(get_db)):
+    payload.photo = save_file_ad(file)
+    print(payload.photo)
     return ad_db_services.create_ad(session=session, ad=payload)
 
 
