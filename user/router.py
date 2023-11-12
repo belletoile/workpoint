@@ -10,8 +10,9 @@ from sqlalchemy import update
 import settings
 from db_initializer import get_db
 from models import models as user_model
-from models.models import User, Place
-from schemas.users import UserSchema, UserBaseSchema, UserOutSchema, TokenPayload, CreateUserSchema, UserTwoBaseSchema
+from models.models import User, Place, FavoritePlace
+from schemas.users import UserSchema, UserBaseSchema, UserOutSchema, TokenPayload, CreateUserSchema, UserTwoBaseSchema, \
+    CreateFavoritePlaceSchema
 from services.files import save_file_user
 from services.db import users as user_db_services
 
@@ -117,3 +118,30 @@ def get_place_by_user_id(token: Annotated[str, Depends(oauth2_scheme)], session:
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     stmt = session.query(Place).filter(Place.user_id == data["id"]).all()
     return stmt
+
+
+@router.post("/favorite_place")
+def add_favorite_place(token: Annotated[str, Depends(oauth2_scheme)],
+                       payload: CreateFavoritePlaceSchema = Body(),
+                       session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    payload.user_id = data["id"]
+    return user_db_services.create_favorite_place(session, favorite_place=payload)
+
+
+@router.get("/my_favorite_places")
+def get_favorite_place_by_user_id(token: Annotated[str, Depends(oauth2_scheme)],
+                                  session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    stmt = session.query(FavoritePlace).filter(FavoritePlace.user_id == data["id"]).all()
+    return stmt
+
+
+@router.delete('/delete_favorite_place')
+def delete_favorite_place(id_fav_place: int,
+                          token: Annotated[str, Depends(oauth2_scheme)],
+                          session: Session = Depends(get_db)):
+    place = session.query(FavoritePlace).filter_by(id=id_fav_place).first()
+    session.delete(place)
+    session.commit()
+    return {'ok'}

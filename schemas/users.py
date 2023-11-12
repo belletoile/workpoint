@@ -43,6 +43,14 @@ class UserOutSchema(BaseModel):
         orm_mode = True
 
 
+class CreateFavoritePlaceSchema(BaseModel):
+    place_id: int
+    user_id: int
+
+    class Config:
+        orm_mode = True
+
+
 class UserLoginSchema(BaseModel):
     phone: str = Field(alias="phone")
     password: str

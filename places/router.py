@@ -152,8 +152,6 @@ def update_tags_place(id_place: int, tags: List[str], token: Annotated[str, Depe
 @router.delete('/delete')
 def delete_place(id_place: int, token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
     place = session.query(Place).filter_by(id=id_place).first()
-    # reviews = session.query(Reviews).filter_by(place_id=id_place).all()
-    # session.delete(reviews)
     session.delete(place)
     session.commit()
     return {'ok'}

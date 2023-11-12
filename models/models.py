@@ -22,6 +22,13 @@ import settings
 from db_initializer import Base
 
 
+class FavoritePlace(Base):
+    __tablename__ = "favoriteplace"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    place_id = Column(Integer, ForeignKey("place.id"))
+
+
 class PlaceTags(Base):
     """Models a tags table"""
     __tablename__ = "placetags"
@@ -89,6 +96,7 @@ class Place(Base):
     conference_hall = Column(Boolean, default=False)
     tags = relationship('Tags', secondary="placetags", back_populates='place')
     reviews = relationship('User', secondary="reviews", back_populates='reviews_user')
+    favorite = relationship('User', secondary="favoriteplace", back_populates="fav_user")
     status = Column(String)
 
 
@@ -113,6 +121,8 @@ class User(Base):
     is_active = Column(Boolean, default=False)
     photo_user = Column(String)
     reviews_user = relationship('Place', secondary="reviews", back_populates='reviews', cascade='all, delete')
+    fav_user = relationship('Place', secondary="favoriteplace", back_populates="favorite", cascade='all, delete')
+
 
     UniqueConstraint("phone", name="uq_user_phone")
     PrimaryKeyConstraint("id", name="pk_user_id")

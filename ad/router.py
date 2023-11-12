@@ -1,5 +1,3 @@
-import datetime
-
 from fastapi import APIRouter, UploadFile, File, Depends, Body
 from sqlalchemy.orm import Session
 

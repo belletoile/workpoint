@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select, String
 
-from models.models import User, Place, Tags
+from models.models import User, Place, Tags, FavoritePlace
 from schemas.places import PlaceBaseSchema
-from schemas.users import CreateUserSchema
+from schemas.users import CreateUserSchema, CreateFavoritePlaceSchema
 
 
 def create_user(session: Session, user: CreateUserSchema):
@@ -12,6 +12,14 @@ def create_user(session: Session, user: CreateUserSchema):
     session.commit()
     session.refresh(db_user)
     return db_user
+
+
+def create_favorite_place(session: Session, favorite_place: CreateFavoritePlaceSchema):
+    db_fav_place = FavoritePlace(**favorite_place.dict())
+    session.add(db_fav_place)
+    session.commit()
+    session.refresh(db_fav_place)
+    return db_fav_place
 
 
 def create_place(session: Session, place: PlaceBaseSchema, tags):
