@@ -24,3 +24,12 @@ def upload_advertisement(payload: AdBaseSchema = Body(), file: UploadFile = File
     stmt = session.query(Place.id).filter_by(name=payload.name, address=payload.address).first()
     payload.id_place = stmt.id
     return ad_db_services.create_ad(session=session, ad=payload)
+
+
+@router.post("/count_ad")
+def check_count_advertisement(date_to: str, date_from: str, session: Session = Depends(get_db)):
+    stmt = session.query(Ad).filter_by(date_to=date_to, date_from=date_from).count()
+    if stmt < 5:
+        return True
+    else:
+        return False

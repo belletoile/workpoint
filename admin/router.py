@@ -1,6 +1,3 @@
-
-from typing import Annotated
-
 from fastapi import APIRouter, Depends, Body, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
@@ -11,7 +8,7 @@ import jwt
 import settings
 from db_initializer import get_db
 from models.models import *
-from schemas.places import PlaceTwoBaseSchema, Status
+from schemas.places import Status
 
 router = APIRouter(
     prefix="/admin",
