@@ -11,7 +11,7 @@ import jwt
 import settings
 from db_initializer import get_db
 from models.models import *
-from schemas.places import PlaceTwoBaseSchema
+from schemas.places import PlaceTwoBaseSchema, Status
 
 router = APIRouter(
     prefix="/admin",
@@ -23,24 +23,24 @@ ALGORITHM = "HS256"
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="user/login")
 
 
-@router.post("/check_place")
-def changed_status_place(token: Annotated[str, Depends(oauth2_scheme)],
-                         payload: PlaceTwoBaseSchema = Body(),
+@router.post("/check_place", response_model=None)
+def changed_status_place(id_place: int,
+                         status_place: Status,
+                         token: Annotated[str, Depends(oauth2_scheme)],
                          session: Session = Depends(get_db), ):
         data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
         stmt = session.query(User).get(data["id"])
         if stmt.role_id == 3:
-                payload.user_id = data["id"]
-                stmt = sqlalchemy_update(Place).where(
-                    Place.id == payload.id).values(**payload.dict())
-                session.execute(stmt)
-                session.commit()
+            stmt = session.query(Place).filter_by(id=id_place).one()
+            stmt.status = status_place
+            session.add(stmt)
+            session.commit()
         else:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Не хватает прав на выполнение действий"
             )
-        return {f'The status has changed: {payload.status}'}
+        return {f'The status has changed: {status_place}'}
 
 
 @router.delete("/delete_review")
