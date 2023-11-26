@@ -98,6 +98,7 @@ class Place(Base):
     reviews = relationship('User', secondary="reviews", back_populates='reviews_user')
     favorite = relationship('User', secondary="favoriteplace", back_populates="fav_user")
     status = Column(String)
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
 
 
 class Role(Base):
