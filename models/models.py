@@ -61,6 +61,7 @@ class Tags(Base):
 class Ad(Base):
     __tablename__ = "ad"
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
     name = Column(String)
     city = Column(String)
     address = Column(String)

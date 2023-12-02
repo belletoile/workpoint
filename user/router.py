@@ -10,7 +10,7 @@ from sqlalchemy import update
 import settings
 from db_initializer import get_db
 from models import models as user_model
-from models.models import User, Place, FavoritePlace
+from models.models import User, Place, FavoritePlace, Ad
 from schemas.users import UserSchema, UserBaseSchema, UserOutSchema, TokenPayload, CreateUserSchema, UserTwoBaseSchema, \
     CreateFavoritePlaceSchema
 from services.files import save_file_user
@@ -113,7 +113,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], session: Ses
     return stmt
 
 
-@router.get("/")
+@router.get("/place")
 def get_place_by_user_id(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     stmt = session.query(Place).filter(Place.user_id == data["id"]).all()
@@ -145,3 +145,10 @@ def delete_favorite_place(id_fav_place: int,
     session.delete(place)
     session.commit()
     return {'ok'}
+
+
+@router.get("/add")
+def get_advertisement_by_user_id(token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    stmt = session.query(Ad).filter(Ad.user_id == data["id"]).all()
+    return stmt

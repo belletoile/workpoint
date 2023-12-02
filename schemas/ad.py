@@ -17,6 +17,7 @@ class Status(str, Enum):
 
 
 class AdBaseSchema(BaseModel):
+    user_id: int
     name: str
     city: str
     address: str
