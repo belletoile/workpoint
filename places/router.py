@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, Body, UploadFile, File, HTTPException, s
 from sqlalchemy import update
 
 import settings
-from models.models import Place, Tags, Reviews, PlaceTags
+from models.models import Place, Tags, Reviews, PlaceTags, ReviewsAnswer
 
 from db_initializer import get_db
 from schemas.places import Hours, Cafe, PlaceSchema, PlaceBaseSchema, PlaceTwoBaseSchema
@@ -94,11 +94,14 @@ def get_place_by_id(id_place: int, session: Session = Depends(get_db)):
 @router.post('/get_reviews')
 def get_reviews_by_id_place(id_place: int, session: Session = Depends(get_db)):
     stmt = session.query(Reviews).filter(Reviews.place_id == id_place).all()
-    # stmt2 = session.query(Place).filter(Place.id == id_place).first()
-    # stmt2.tags
-    # stmt3 = session.query(PlaceTags).filter(PlaceTags.place_id == id_place).all()
-    # stmt + stmt2 + stmt3
     return stmt
+
+
+@router.post('/get_reviews_answer')
+def get_reviews_answer_by_id_place(id_reviews: int, session: Session = Depends(get_db)):
+    stmt = session.query(ReviewsAnswer).filter(Reviews.id == id_reviews).all()
+    return stmt
+
 
 @router.get('/all')
 def all_places(session: Session = Depends(get_db)):
