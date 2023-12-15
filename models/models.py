@@ -50,6 +50,20 @@ class Reviews(Base):
     rank = Column(Integer)
 
 
+class ReviewsAnswer(Base):
+    """Models a reviews table"""
+    __tablename__ = "reviews_answer"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    review_id = Column(Integer, ForeignKey("reviews.id"))
+    user_name = Column(String)
+    user_surname = Column(String)
+    user_photo = Column(String)
+    place_id = Column(Integer, ForeignKey("place.id"))
+    body = Column(String)
+    created_at = Column(TIMESTAMP, default=datetime.utcnow)
+
+
 class Tags(Base):
     """Models a tags table"""
     __tablename__ = "tags"

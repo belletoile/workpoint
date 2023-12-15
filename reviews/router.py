@@ -9,6 +9,7 @@ import settings
 from db_initializer import get_db
 from models.models import User
 from schemas.reviews import ReviewBaseSchema
+from schemas.reviews_answer import ReviewAnswerBaseSchema
 from services.db import reviews as rw_db_services
 
 router = APIRouter(
@@ -29,3 +30,16 @@ def add_review(token: Annotated[str, Depends(oauth2_scheme)], payload: ReviewBas
     payload.user_surname = stmt.surname
     payload.user_photo = stmt.photo_user
     return rw_db_services.create_rw(session=session, reviews=payload)
+
+
+@router.post('/add_review_answer')
+def add_review_answer(token: Annotated[str, Depends(oauth2_scheme)],
+                      payload: ReviewAnswerBaseSchema = Body(),
+                      session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    payload.user_id = data["id"]
+    stmt = session.query(User).get(data["id"])
+    payload.user_name = stmt.name
+    payload.user_surname = stmt.surname
+    payload.user_photo = stmt.photo_user
+    return rw_db_services.create_rw_answer(session=session, reviews=payload)

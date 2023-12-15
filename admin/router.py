@@ -40,6 +40,26 @@ def changed_status_place(id_place: int,
         return {f'The status has changed: {status_place}'}
 
 
+@router.post("/check_ad", response_model=None)
+def changed_status_advertisement(id_ad: int,
+                         status_place: Status,
+                         token: Annotated[str, Depends(oauth2_scheme)],
+                         session: Session = Depends(get_db), ):
+        data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        stmt = session.query(User).get(data["id"])
+        if stmt.role_id == 3:
+            stmt = session.query(Ad).filter_by(id=id_ad).one()
+            stmt.status = status_place
+            session.add(stmt)
+            session.commit()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Не хватает прав на выполнение действий"
+            )
+        return {f'The status has changed: {status_place}'}
+
+
 @router.delete("/delete_review")
 def delete_reviews(id_review: int,
                    token: Annotated[str, Depends(oauth2_scheme)],
