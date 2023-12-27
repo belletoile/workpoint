@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, Body, UploadFile, File, HTTPException, s
 from sqlalchemy import update
 
 import settings
-from models.models import Place, Tags, Reviews, PlaceTags, ReviewsAnswer
+from models.models import Place, Tags, Reviews, PlaceTags, ReviewsAnswer, Ad
 
 from db_initializer import get_db
 from schemas.places import Hours, Cafe, PlaceSchema, PlaceBaseSchema, PlaceTwoBaseSchema
@@ -141,7 +141,8 @@ def update_photo(id_place: int, token: Annotated[str, Depends(oauth2_scheme)], f
 
 
 @router.post('/update_tags')
-def update_tags_place(id_place: int, tags: List[str], token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+def update_tags_place(id_place: int, tags: List[str], token: Annotated[str, Depends(oauth2_scheme)],
+                      session: Session = Depends(get_db)):
     stmt = session.query(Place).filter_by(id=id_place).first()
     print(stmt.tags)
     stmt.tags = []
@@ -154,7 +155,11 @@ def update_tags_place(id_place: int, tags: List[str], token: Annotated[str, Depe
 
 @router.delete('/delete')
 def delete_place(id_place: int, token: Annotated[str, Depends(oauth2_scheme)], session: Session = Depends(get_db)):
+    reviews = Reviews.__table__.delete().where(Reviews.place_id == id_place)
     place = session.query(Place).filter_by(id=id_place).first()
+    add = Ad.__table__.delete().where(Ad.id_place == id_place)
+    session.execute(reviews)
+    session.execute(add)
     session.delete(place)
     session.commit()
-    return {'ok'}
+    return {"ok"}

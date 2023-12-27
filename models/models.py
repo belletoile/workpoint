@@ -110,7 +110,7 @@ class Place(Base):
     recreation_area = Column(Boolean, default=False)
     conference_hall = Column(Boolean, default=False)
     tags = relationship('Tags', secondary="placetags", back_populates='place')
-    reviews = relationship('User', secondary="reviews", back_populates='reviews_user')
+    reviews = relationship('User', secondary="reviews", back_populates='reviews_user', cascade='all, delete')
     favorite = relationship('User', secondary="favoriteplace", back_populates="fav_user")
     status = Column(String)
     created_at = Column(TIMESTAMP, default=datetime.utcnow)
