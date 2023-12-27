@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Body, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from sqlalchemy import update as sqlalchemy_update
+from sqlalchemy import update as sqlalchemy_update, select
 
 import jwt
 
@@ -76,3 +76,18 @@ def delete_reviews(id_review: int,
             detail="Не хватает прав на выполнение действий"
         )
     return {f'The review {id_review} has been deleted'}
+
+
+@router.get("/users")
+def get_all_users(token: Annotated[str, Depends(oauth2_scheme)],
+                   session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    user_stmt = session.query(User).get(data["id"])
+    if user_stmt.role_id == 3:
+        stmt = session.query(User).all()
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Не хватает прав на выполнение действий"
+        )
+    return stmt
