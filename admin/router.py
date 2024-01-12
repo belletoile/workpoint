@@ -68,6 +68,8 @@ def delete_reviews(id_review: int,
     user_stmt = session.query(User).get(data["id"])
     if user_stmt.role_id == 3:
         stmt = session.query(Reviews).filter_by(id=id_review).first()
+        reviews = ReviewsAnswer.__table__.delete().where(ReviewsAnswer.review_id == id_review)
+        session.execute(reviews)
         session.delete(stmt)
         session.commit()
     else:

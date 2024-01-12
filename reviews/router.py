@@ -39,6 +39,7 @@ def add_review_answer(token: Annotated[str, Depends(oauth2_scheme)],
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     payload.user_id = data["id"]
     stmt = session.query(User).get(data["id"])
+    print(payload.user_id)
     payload.user_name = stmt.name
     payload.user_surname = stmt.surname
     payload.user_photo = stmt.photo_user

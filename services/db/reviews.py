@@ -14,8 +14,8 @@ def create_rw(session: Session, reviews: ReviewBaseSchema):
 
 
 def create_rw_answer(session: Session, reviews: ReviewAnswerBaseSchema):
-    db_rv = ReviewsAnswer(**reviews.dict())
-    session.add(db_rv)
+    db_rv_ans = ReviewsAnswer(**reviews.dict())
+    session.add(db_rv_ans)
     session.commit()
-    session.refresh(db_rv)
-    return db_rv
+    session.refresh(db_rv_ans)
+    return db_rv_ans
