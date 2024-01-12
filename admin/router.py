@@ -91,3 +91,21 @@ def get_all_users(token: Annotated[str, Depends(oauth2_scheme)],
             detail="Не хватает прав на выполнение действий"
         )
     return stmt
+
+
+@router.put("/role")
+def changed_role(user_id: int, role_id: int, token: Annotated[str, Depends(oauth2_scheme)],
+                 session: Session = Depends(get_db)):
+    data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    user_stmt = session.query(User).get(data["id"])
+    if user_stmt.role_id == 3:
+        stmt = session.query(User).get(user_id)
+        stmt.role_id = role_id
+        session.add(stmt)
+        session.commit()
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Не хватает прав на выполнение действий"
+        )
+    return stmt
