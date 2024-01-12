@@ -93,7 +93,7 @@ def get_all_users(token: Annotated[str, Depends(oauth2_scheme)],
     return stmt
 
 
-@router.put("/role")
+@router.post("/role")
 def changed_role(user_id: int, role_id: int, token: Annotated[str, Depends(oauth2_scheme)],
                  session: Session = Depends(get_db)):
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
