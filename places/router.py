@@ -98,8 +98,14 @@ def get_reviews_by_id_place(id_place: int, session: Session = Depends(get_db)):
 
 
 @router.post('/get_reviews_answer')
-def get_reviews_answer_by_id_place(id_reviews: int, session: Session = Depends(get_db)):
-    stmt = session.query(ReviewsAnswer).filter(Reviews.id == id_reviews).all()
+def get_reviews_answer_by_id_reviews(id_reviews: int, session: Session = Depends(get_db)):
+    stmt = session.query(ReviewsAnswer).filter(ReviewsAnswer.review_id == id_reviews).all()
+    return stmt
+
+
+@router.post('/get_reviews_answer_by_place')
+def get_reviews_answer_by_id_place(id_place: int, session: Session = Depends(get_db)):
+    stmt = session.query(ReviewsAnswer).filter(ReviewsAnswer.place_id == id_place).all()
     return stmt
 
 
