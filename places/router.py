@@ -114,7 +114,7 @@ def all_places(session: Session = Depends(get_db)):
     return session.query(Place).all()
 
 
-@router.post('/update')
+@router.put('/update')
 def update_place(token: Annotated[str, Depends(oauth2_scheme)], payload: PlaceTwoBaseSchema = Body(),
                  session: Session = Depends(get_db)):
     data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
