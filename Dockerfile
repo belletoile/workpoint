@@ -11,4 +11,4 @@ COPY . /code
 
 RUN mkdir -p /code/tmp_files
 
-CMD PYTHONPATH=/code /code/run.sh
+CMD [ "python", "main.py" ]

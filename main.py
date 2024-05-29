@@ -40,6 +40,7 @@ from fastapi import BackgroundTasks
 from starlette.responses import JSONResponse
 from pydantic import EmailStr, BaseModel
 from typing import List
+import os
 
 
 class EmailSchema(BaseModel):
@@ -73,4 +74,4 @@ app.include_router(router_tasks)
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True, log_level="debug")
+    app.run(host='0.0.0.0', port=int(os.environ['PORT']), motd=False, access_log=False)
