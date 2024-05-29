@@ -13,4 +13,5 @@ SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD")
 SMTP_USER = os.environ.get("SMTP_USER")
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
-
+ENDPOINT_URL = os.environ.get("ENDPOINT_URL")
+REGION_NAME = os.environ.get("REGION_NAME")

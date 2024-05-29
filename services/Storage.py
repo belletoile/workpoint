@@ -1,15 +1,15 @@
 import boto3
 from loguru import logger
 
-from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+from config import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, ENDPOINT_URL, REGION_NAME
 
 
 class Storage:
     def __init__(self, bucket_name):
         self.bucket_name = bucket_name
         self.s3 = boto3.client('s3',
-                               endpoint_url='https://s3.timeweb.com',
-                               region_name='ru-1',
+                               endpoint_url=ENDPOINT_URL,
+                               region_name=REGION_NAME,
                                aws_access_key_id=AWS_ACCESS_KEY_ID,
                                aws_secret_access_key=AWS_SECRET_ACCESS_KEY
                                )
